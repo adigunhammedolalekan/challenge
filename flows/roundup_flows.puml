@@ -6,23 +6,24 @@ participant TransactionsService
 participant SavingsService
 participant APIIntegrationService
 
-RoundingController -> RoundingService: PUT /round-savings {"savingGoalName": String, "fromDate": Date, "toDate": Date}
+RoundingController -> RoundingService: PUT /round-save {"savingGoalName": String, "since": Date}
 RoundingService -> AccountsService: getPrimaryAccount()
 AccountsService -> APIIntegrationService: GET /api/v2/accounts
 APIIntegrationService --> AccountsService: Return all accounts for the authenticated user
-AccountsService --> RoundingService: Return primary account or empty
+AccountsService --> RoundingService: Return primary account or throw error
 
 RoundingService -> TransactionsService: Get transactions for primary account
-TransactionsService -> APIIntegrationService: GET /transactions-between?minTransactionTimestamp={}&maxTransactionTimestamp={}
-APIIntegrationService --> TransactionsService: List of transactions between specified dates or empty
-TransactionsService --> RoundingService: List of transactions
+TransactionsService -> APIIntegrationService: GET feed/account/accountUid/category/categoryUid?changesSince={changesSince}
+APIIntegrationService --> TransactionsService: List of transactions occurred since "changesSince"
+TransactionsService --> TransactionsService: extract eligible transactions
+TransactionsService --> RoundingService: return eligible transactions
 
 RoundingService -> SavingsService: Process transactions by rounding up to an amount
 SavingsService -> APIIntegrationService: Fetch saving goals
 APIIntegrationService --> SavingsService: Return all available saving goals
 
 alt Saving goal exists
-    SavingsService -> SavingsService: Find saving goal by "savingGoalName" or use default "Saving" if "null"
+    SavingsService -> SavingsService: Find saving goal by "savingGoalName" or use default "Hammed Saving" if "null"
 else
     SavingsService -> SavingsService: Create new saving goal by "savingGoalName" or use default "Saving" if "null"
 end
