@@ -18,6 +18,6 @@ public record RoundAndSaveRequest(
 
     @Override
     public LocalDate since() {
-        return isNull(since) ? LocalDate.EPOCH : since;
+        return isNull(since) ? LocalDate.now().minusWeeks(1) : since;
     }
 }
