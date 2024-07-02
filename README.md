@@ -30,4 +30,6 @@ curl -X PUT \
   -d '{"savingsGoalName": "Buy a car", "since": "2024-06-25"}'
 ```
 
-### How it works
+## How it works
+#### Flow Diagram
+![Flow Diagram](https://github.com/adigunhammedolalekan/starling-challenge/blob/main/flows/roundup_flows.png)
