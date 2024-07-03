@@ -34,5 +34,5 @@ SavingsGoalService -> APIIntegrationService: Transfer money to saving goal retri
 SavingsGoalService --> RoundingService: Return affected saving goal
 
 RoundingService --> RoundingController: Return affected saving goal details
-RoundingController --> Client: SavingsGoal object serialized as JSON(ommitted for brevity)
+RoundingController --> Client: SavingsGoal object serialized as JSON(omitted for brevity)
 @enduml
