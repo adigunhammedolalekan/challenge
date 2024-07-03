@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.RestClientResponseException;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -112,16 +110,6 @@ public class APIIntegrationServiceImplTest {
 
         assertTrue(response.isPresent());
         assertEquals(transferResponse, response.get());
-    }
-
-    private RestClientResponseException getMockException() {
-        return new RestClientResponseException(
-                "failed",
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "failed to complete request",
-                null,
-                null,
-                null);
     }
 
     private Transaction getMockTransaction() {
