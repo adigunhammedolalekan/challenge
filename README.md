@@ -80,3 +80,7 @@ curl -X PUT \
   * calculate the total rounded amount from the eligible transactions
   * create or get a SavingsGoal - this is done by fetching all existing SavingsGoal for the customer and then finding the given SavingsGoal by name. If non is found, we create a new SavingsGoal using the given name, otherwise, no savingsGoalName was given so we use the default 'Hammed Savings'.
   * add money to the SavingsGoal created/retrieved from the step above
+
+### Potential Improvements
+* Authentication and Authorisation - Currently, the app uses a pre-configured bearer token and automatically selects the primary account associated with this token. To improve security and expand functionality, the app should allow the bearer token to be passed as an Authorization header in the PUT /round-save endpoint. This change will not only enhance security but also extend the API to support multiple customers, rather than just the single owner of the pre-configured token.
+* Keeping track of rounded transactions - Currently, the app processes transactions from one week ago (or a custom date) and rounds them, regardless of whether they have been rounded before. An improvement would be to track rounded transactions to ensure they are not rounded again.
