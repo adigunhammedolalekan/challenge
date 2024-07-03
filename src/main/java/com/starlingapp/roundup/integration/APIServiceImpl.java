@@ -1,5 +1,7 @@
 package com.starlingapp.roundup.integration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -11,6 +13,8 @@ import java.util.Map;
 
 
 public class APIServiceImpl implements APIService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(APIService.class);
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private final String bearerToken;
@@ -46,6 +50,9 @@ public class APIServiceImpl implements APIService {
         var headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set(AUTHORIZATION_HEADER, String.format("Bearer %s", bearerToken));
+
+        LOGGER.info("Sending request: url={}, body={}, urlParams={}, responseType={}",
+                url, body, queryParams, responseType);
         return restTemplate.exchange(
                 url,
                 method,

@@ -1,16 +1,12 @@
 package com.starlingapp.roundup.integration;
 
 import com.starlingapp.roundup.models.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class APIIntegrationServiceImpl implements APIIntegrationService {
-
-    private final Logger LOGGER = LoggerFactory.getLogger(APIIntegrationServiceImpl.class);
 
     private final APIService apiService;
     private static final String API_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
