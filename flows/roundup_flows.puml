@@ -1,12 +1,14 @@
 @startuml
+actor Client
 participant RoundingController
 participant RoundingService
 participant AccountsService
 participant TransactionsService
-participant SavingsService
+participant SavingsGoalService
 participant APIIntegrationService
 
-RoundingController -> RoundingService: PUT /round-save {"savingGoalName": String, "since": Date}
+Client -> RoundingController: PUT /round-save {"savingsGoalName": String, "since": Date}
+RoundingController -> RoundingService: roundAndSave(savingsGoalName, since)
 RoundingService -> AccountsService: getPrimaryAccount()
 AccountsService -> APIIntegrationService: GET /api/v2/accounts
 APIIntegrationService --> AccountsService: Return all accounts for the authenticated user
@@ -18,18 +20,19 @@ APIIntegrationService --> TransactionsService: List of transactions occurred sin
 TransactionsService --> TransactionsService: extract eligible transactions
 TransactionsService --> RoundingService: return eligible transactions
 
-RoundingService -> SavingsService: Process transactions by rounding up to an amount
-SavingsService -> APIIntegrationService: Fetch saving goals
-APIIntegrationService --> SavingsService: Return all available saving goals
+RoundingService -> SavingsGoalService: Process transactions by rounding up to an amount
+SavingsGoalService -> APIIntegrationService: Fetch saving goals
+APIIntegrationService --> SavingsGoalService: Return all available saving goals
 
 alt Saving goal exists
-    SavingsService -> SavingsService: Find saving goal by "savingGoalName" or use default "Hammed Saving" if "null"
+    SavingsGoalService -> SavingsGoalService: Find saving goal by "savingGoalName" or use default "Hammed Saving" if "null"
 else
-    SavingsService -> SavingsService: Create new saving goal by "savingGoalName" or use default "Saving" if "null"
+    SavingsGoalService -> SavingsGoalService: Create new saving goal by "savingGoalName" or use default "Saving" if "null"
 end
 
-SavingsService -> APIIntegrationService: Transfer money to saving goal retrieved from the above
-SavingsService --> RoundingService: Return affected saving goal
+SavingsGoalService -> APIIntegrationService: Transfer money to saving goal retrieved from the above
+SavingsGoalService --> RoundingService: Return affected saving goal
 
 RoundingService --> RoundingController: Return affected saving goal details
+RoundingController --> Client: SavingsGoal object serialized as JSON(ommitted for brevity)
 @enduml
