@@ -48,16 +48,6 @@ public class APIIntegrationServiceImplTest {
     }
 
     @Test
-    void get_accounts_error_test() {
-        when(apiService.get("accounts", AccountsResponse.class))
-                .thenThrow(getMockException());
-
-        var actualResponse = apiIntegrationService.getAccounts();
-
-        assertEquals(List.of(), actualResponse);
-    }
-
-    @Test
     void get_transactions_for_account_test() {
         var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
         var categoryUid = UUID.fromString("e14d38a0-c011-4383-b641-a01b6456e714");
@@ -76,22 +66,6 @@ public class APIIntegrationServiceImplTest {
     }
 
     @Test
-    void get_transactions_for_account_error_test() {
-        var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
-        var categoryUid = UUID.fromString("e14d38a0-c011-4383-b641-a01b6456e714");
-        var changesSince = LocalDate.of(2020, 1, 1);
-        var expectedQueryParams = Map.of("changesSince", "2020-01-01T00:00:00.000Z");
-        var fullPath = "feed/account/960d57a5-31aa-4791-b82e-ad2154bfb266/category/e14d38a0-c011-4383-b641-a01b6456e714?changesSince={changesSince}";
-
-        when(apiService.getWithParams(fullPath, expectedQueryParams, TransactionsResponse.class))
-                .thenThrow(getMockException());
-
-        var response = apiIntegrationService.getTransactionsForAccount(accountUid, categoryUid, changesSince);
-
-        assertEquals(List.of(), response);
-    }
-
-    @Test
     void get_savings_goal_for_account_test() {
         var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
         var expectedResponse = new GetSavingsGoalResponse(
@@ -103,18 +77,6 @@ public class APIIntegrationServiceImplTest {
         var response = apiIntegrationService.getSavingsGoalsForAccount(accountUid);
 
         assertEquals(expectedResponse.savingsGoalList(), response);
-    }
-
-    @Test
-    void get_savings_goal_for_account_error_test() {
-        var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
-        var expectedPath = "account/960d57a5-31aa-4791-b82e-ad2154bfb266/savings-goals";
-        when(apiService.get(expectedPath, GetSavingsGoalResponse.class))
-                .thenThrow(getMockException());
-
-        var response = apiIntegrationService.getSavingsGoalsForAccount(accountUid);
-
-        assertEquals(List.of(), response);
     }
 
     @Test
@@ -134,19 +96,6 @@ public class APIIntegrationServiceImplTest {
     }
 
     @Test
-    void create_savings_goal_error_test() {
-        var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
-        var expectedPath = "account/960d57a5-31aa-4791-b82e-ad2154bfb266/savings-goals";
-        var request = new CreateSavingGoalRequest("TEST", Currency.GBP, null);
-        when(apiService.put(expectedPath, request, SavingsGoal.class))
-                .thenThrow(getMockException());
-
-        var response = apiIntegrationService.createSavingsGoal(accountUid, request);
-
-        assertTrue(response.isEmpty());
-    }
-
-    @Test
     void add_money_to_savings_goal_test() {
         var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
         var savingsGoalUid = UUID.fromString("56daa976-e9f0-47e8-9b3c-d77ae718c3a9");
@@ -163,23 +112,6 @@ public class APIIntegrationServiceImplTest {
 
         assertTrue(response.isPresent());
         assertEquals(transferResponse, response.get());
-    }
-
-    @Test
-    void add_money_to_savings_goal_error_test() {
-        var accountUid = UUID.fromString("960d57a5-31aa-4791-b82e-ad2154bfb266");
-        var savingsGoalUid = UUID.fromString("56daa976-e9f0-47e8-9b3c-d77ae718c3a9");
-        var transferUid = UUID.fromString("f6b8cf6b-5523-4739-9736-1281a6a44449");
-        var transferRequest = new SavingsGoalTransferRequest(
-                new Money(Currency.GBP, BigInteger.valueOf(1000)), transferUid);
-        var fullPath = "account/960d57a5-31aa-4791-b82e-ad2154bfb266/savings-goals/56daa976-e9f0-47e8-9b3c-d77ae718c3a9/add-money/f6b8cf6b-5523-4739-9736-1281a6a44449";
-
-        when(apiService.put(fullPath, transferRequest, SavingsGoalTransferResponse.class))
-                .thenThrow(getMockException());
-
-        var response = apiIntegrationService.addMoneyToSavingsGoal(accountUid, savingsGoalUid, transferRequest);
-
-        assertTrue(response.isEmpty());
     }
 
     private RestClientResponseException getMockException() {

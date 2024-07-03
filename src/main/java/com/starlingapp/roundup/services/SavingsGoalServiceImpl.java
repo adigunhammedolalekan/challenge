@@ -5,6 +5,8 @@ import com.starlingapp.roundup.models.*;
 import com.starlingapp.roundup.models.enums.Currency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -48,7 +50,7 @@ public class SavingsGoalServiceImpl implements SavingsGoalService {
                 .or(() -> apiIntegrationService.createSavingsGoal(accountUid, CreateSavingGoalRequest.of(savingsGoalName, Currency.GBP)))
                 .stream()
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, String.format("failed to create SavingsGoal %s for customer", savingsGoalName)));
     }
 
     private Optional<SavingsGoal> getSavingsGoalByName(UUID accountUid, String savingsGoalName) {

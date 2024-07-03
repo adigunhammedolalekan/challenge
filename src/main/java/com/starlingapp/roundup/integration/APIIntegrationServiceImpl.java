@@ -3,7 +3,6 @@ package com.starlingapp.roundup.integration;
 import com.starlingapp.roundup.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestClientResponseException;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -22,13 +21,8 @@ public class APIIntegrationServiceImpl implements APIIntegrationService {
 
     @Override
     public List<Account> getAccounts() {
-        try {
-            return apiService.get("accounts", AccountsResponse.class)
-                    .accounts();
-        } catch (RestClientResponseException exception) {
-            LOGGER.error("failed to GET /accounts: {}", exception.getMessage());
-            return List.of();
-        }
+        return apiService.get("accounts", AccountsResponse.class)
+                .accounts();
     }
 
     @Override
@@ -38,37 +32,22 @@ public class APIIntegrationServiceImpl implements APIIntegrationService {
             LocalDate changesSince) {
         var path = String.format("feed/account/%s/category/%s?changesSince={changesSince}", accountUid, categoryUid);
         var queryParams = Map.of("changesSince", formatDateUTC(changesSince));
-        try {
-            return apiService.getWithParams(path, queryParams, TransactionsResponse.class)
-                    .feedItems();
-        } catch (RestClientResponseException exception) {
-            LOGGER.error("failed to GET {}: {}, params={}", path, exception.getMessage(), queryParams);
-            return List.of();
-        }
+        return apiService.getWithParams(path, queryParams, TransactionsResponse.class)
+                .feedItems();
     }
 
     @Override
     public List<SavingsGoal> getSavingsGoalsForAccount(UUID accountUid) {
         var path = String.format("account/%s/savings-goals", accountUid);
-        try {
-            return apiService.get(path, GetSavingsGoalResponse.class)
-                    .savingsGoalList();
-        } catch (RestClientResponseException exception) {
-            LOGGER.error("failed to GET {}: {}", path, exception.getMessage());
-            return List.of();
-        }
+        return apiService.get(path, GetSavingsGoalResponse.class)
+                .savingsGoalList();
     }
 
     @Override
     public Optional<SavingsGoal> createSavingsGoal(UUID accountUid, CreateSavingGoalRequest savingsGoal) {
         var path = String.format("account/%s/savings-goals", accountUid);
-        try {
-            return Optional.ofNullable(
-                    apiService.put(path, savingsGoal, SavingsGoal.class));
-        } catch (RestClientResponseException exception) {
-            LOGGER.error("failed to PUT {}: {}", path, exception.getMessage());
-            return Optional.empty();
-        }
+        return Optional.ofNullable(
+                apiService.put(path, savingsGoal, SavingsGoal.class));
     }
 
     @Override
@@ -77,13 +56,8 @@ public class APIIntegrationServiceImpl implements APIIntegrationService {
                                                                        SavingsGoalTransferRequest request) {
         var path = String.format("account/%s/savings-goals/%s/add-money/%s",
                 accountUid, savingsGoalUid, request.transferUid());
-        try {
-            return Optional.ofNullable(apiService
-                    .put(path, request, SavingsGoalTransferResponse.class));
-        } catch (RestClientResponseException exception) {
-            LOGGER.error("failed to PUT {}: {}: {}", path, exception.getMessage(), request);
-            return Optional.empty();
-        }
+        return Optional.ofNullable(apiService
+                .put(path, request, SavingsGoalTransferResponse.class));
     }
 
     private String formatDateUTC(LocalDate localDate) {

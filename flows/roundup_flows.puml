@@ -27,7 +27,7 @@ APIIntegrationService --> SavingsGoalService: Return all available saving goals
 alt Saving goal exists
     SavingsGoalService -> SavingsGoalService: Find saving goal by "savingGoalName" or use default "Hammed Saving" if "null"
 else
-    SavingsGoalService -> SavingsGoalService: Create new saving goal by "savingGoalName" or use default "Saving" if "null"
+    SavingsGoalService -> SavingsGoalService: Create new saving goal by "savingGoalName" or use default "Hammed Saving" if "null"
 end
 
 SavingsGoalService -> APIIntegrationService: Transfer money to saving goal retrieved from the above
