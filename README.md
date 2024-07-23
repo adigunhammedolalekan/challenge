@@ -1,4 +1,4 @@
-### Starling Bank Challenge
+### API Challenge
 
 For a customer, take all the transactions in a given week and round them up to the nearest
 pound. For example with spending of £4.35, £5.20 and £0.87, the round-up would be £1.58.
@@ -7,7 +7,7 @@ future adventures.
 
 ### Running the app
 ```bash
-export STARLING_API_BASEURL=https://api-sandbox.starlingbank.com/api/v2/ STARTLING_API_BEARER_TOKEN={yourApplicationBearerToken} && ./gradlew bootRun
+export STARLING_API_BASEURL=https://api-sandbox.api.com/api/v2/ STARTLING_API_BEARER_TOKEN={yourApplicationBearerToken} && ./gradlew bootRun
 ```
 
 ### Running with Docker
@@ -19,7 +19,7 @@ export STARLING_API_BASEURL=https://api-sandbox.starlingbank.com/api/v2/ STARTLI
  docker build -t roundup-app .
  
  # run
- docker run -p 8080:8080 -d -e STARLING_API_BASEURL='https://api-sandbox.starlingbank.com/api/v2/' -e STARLING_API_BEARER_TOKEN='yourApplicationBearerToken' roundup-app
+ docker run -p 8080:8080 -d -e STARLING_API_BASEURL='https://api-sandbox.api.com/api/v2/' -e STARLING_API_BEARER_TOKEN='yourApplicationBearerToken' roundup-app
 ```
 
 ### Testing
